@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"/>
+<meta name="theme-color" content="#0b0f17"/>
+<title>PuruPuru Camera Test</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b0f17;color:#fff;font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif}
+#bg{position:fixed;inset:0;background:radial-gradient(circle at 50% 28%,#334761 0%,#18202c 46%,#090c12 100%)}
+#avatarWrap{position:fixed;left:50%;bottom:-4vh;width:min(94vw,73vh);transform-origin:50% 72%;will-change:transform}
+#avatarSvg{display:block;width:100%;height:auto;filter:drop-shadow(0 28px 26px rgba(0,0,0,.42))}
+#camBox{position:fixed;right:12px;top:max(12px,env(safe-area-inset-top));width:104px;aspect-ratio:4/3;border-radius:15px;overflow:hidden;background:#000;border:1px solid #ffffff44;box-shadow:0 8px 26px #0006}
+#cam{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+#statusBox{position:fixed;left:12px;top:max(12px,env(safe-area-inset-top));max-width:calc(100vw - 132px);padding:10px 12px;border-radius:14px;background:#000a;border:1px solid #ffffff22;backdrop-filter:blur(10px);font-size:12px;line-height:1.45}
+#dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffd25b;margin-right:7px}.ok #dot{background:#59e37c}.err #dot{background:#ff6767}
+#detail{margin-top:6px;color:#ffd9d9;white-space:pre-wrap;word-break:break-word;display:none}
+#start{position:fixed;z-index:20;left:50%;top:50%;transform:translate(-50%,-50%);border:0;border-radius:18px;padding:17px 25px;background:#fff;color:#111;font-size:17px;font-weight:800;box-shadow:0 18px 60px #0009}
+#hint{position:fixed;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);padding:8px 12px;border-radius:999px;background:#0008;font-size:12px;white-space:nowrap}
+#eyesClosed{display:none}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="avatarWrap">
+<svg id="avatarSvg" viewBox="0 0 700 980" xmlns="http://www.w3.org/2000/svg" aria-label="anime male avatar">
+  <defs>
+    <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe0cf"/><stop offset="1" stop-color="#e9b69c"/></linearGradient>
+    <linearGradient id="hair" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4b332d"/><stop offset="1" stop-color="#211b1d"/></linearGradient>
+    <linearGradient id="jacket" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#272c37"/><stop offset="1" stop-color="#11141b"/></linearGradient>
+  </defs>
+  <path d="M85 980V760Q90 680 190 642L270 612H430L510 642Q610 680 615 760V980Z" fill="url(#jacket)"/>
+  <path d="M240 650L350 790L460 650L424 610H276Z" fill="#f0f2f5"/>
+  <path d="M275 618Q290 565 300 520H400Q410 565 425 618Q390 665 350 665Q310 665 275 618Z" fill="url(#skin)"/>
+  <path d="M183 312Q178 232 228 166Q278 98 356 100Q445 100 493 171Q533 230 520 315L504 457Q494 548 416 603Q350 640 282 602Q207 552 196 458Z" fill="url(#skin)" stroke="#b9806d" stroke-width="4"/>
+  <ellipse cx="190" cy="386" rx="26" ry="54" fill="#edbea7" stroke="#b9806d" stroke-width="4"/>
+  <ellipse cx="510" cy="386" rx="26" ry="54" fill="#edbea7" stroke="#b9806d" stroke-width="4"/>
+  <path d="M174 330Q142 204 242 124Q310 66 399 83Q508 105 536 234Q544 276 523 335Q500 280 477 238Q444 265 410 271Q432 225 439 180Q393 238 337 260Q355 207 356 156Q318 220 249 257Q265 205 258 164Q219 226 196 330Z" fill="url(#hair)" stroke="#171317" stroke-width="5"/>
+  <path d="M213 286Q278 231 345 223Q323 291 272 328Q302 271 300 248Q258 282 213 318Z" fill="#352627"/>
+  <path d="M487 280Q430 234 365 224Q376 278 421 315Q405 274 405 250Q449 280 487 314Z" fill="#2b2224"/>
+  <path d="M238 337Q286 318 325 337" fill="none" stroke="#3b2926" stroke-width="11" stroke-linecap="round"/>
+  <path d="M375 337Q414 318 462 337" fill="none" stroke="#3b2926" stroke-width="11" stroke-linecap="round"/>
+  <g id="eyesOpen">
+    <path d="M233 376Q277 344 323 377Q278 410 233 376Z" fill="#fff" stroke="#5a3b39" stroke-width="5"/>
+    <ellipse cx="279" cy="377" rx="18" ry="22" fill="#6f9fbe"/><ellipse cx="279" cy="379" rx="8" ry="13" fill="#172433"/><circle cx="273" cy="370" r="4" fill="#fff"/>
+    <path d="M377 377Q423 344 467 376Q422 410 377 377Z" fill="#fff" stroke="#5a3b39" stroke-width="5"/>
+    <ellipse cx="421" cy="377" rx="18" ry="22" fill="#6f9fbe"/><ellipse cx="421" cy="379" rx="8" ry="13" fill="#172433"/><circle cx="415" cy="370" r="4" fill="#fff"/>
+  </g>
+  <g id="eyesClosed">
+    <path d="M235 382Q278 402 322 382" fill="none" stroke="#5a3b39" stroke-width="7" stroke-linecap="round"/>
+    <path d="M378 382Q422 402 465 382" fill="none" stroke="#5a3b39" stroke-width="7" stroke-linecap="round"/>
+  </g>
+  <path d="M348 396Q330 449 347 464Q363 466 374 455" fill="none" stroke="#c98d7a" stroke-width="5" stroke-linecap="round"/>
+  <path id="mouthClosed" d="M307 505Q350 523 393 505Q352 544 307 505Z" fill="#c96e73" stroke="#9b5357" stroke-width="4"/>
+  <path id="mouthHalf" d="M304 501Q350 475 396 501Q385 545 350 549Q315 545 304 501Z" fill="#7c3d45" stroke="#8e4d50" stroke-width="4" style="display:none"/>
+  <path id="mouthOpen" d="M299 496Q350 461 401 496Q394 561 350 575Q306 561 299 496Z" fill="#74313d" stroke="#8e4d50" stroke-width="4" style="display:none"/>
+  <path id="tongue" d="M316 548Q350 529 384 548Q370 568 350 572Q329 569 316 548Z" fill="#e98f92" style="display:none"/>
+  <path d="M102 980Q127 775 244 673L282 780L350 915L419 780L456 673Q575 776 598 980Z" fill="none" stroke="#3b414e" stroke-width="18"/>
+</svg>
+</div>
+<div id="camBox"><video id="cam" autoplay="autoplay" muted="muted" playsinline="playsinline"></video></div>
+<div id="statusBox"><span id="dot"></span><span id="status">起動準備</span><div id="detail"></div></div>
+<button id="start" type="button">カメラで開始</button>
+<div id="hint">顔を正面に置くだけで動きます</div>
+<script type="module"><![CDATA[
+const video=document.getElementById('cam'),startBtn=document.getElementById('start'),wrap=document.getElementById('avatarWrap');
+const statusBox=document.getElementById('statusBox'),statusText=document.getElementById('status'),detail=document.getElementById('detail');
+const eyesOpen=document.getElementById('eyesOpen'),eyesClosed=document.getElementById('eyesClosed');
+const mouthClosed=document.getElementById('mouthClosed'),mouthHalf=document.getElementById('mouthHalf'),mouthOpen=document.getElementById('mouthOpen'),tongue=document.getElementById('tongue');
+let landmarker=null,running=false,lastVideo=-1,lastDetect=0,baseline=null,noFace=0;
+const smooth={x:0,y:0,r:0,z:1,k:0},target={x:0,y:0,r:0,z:1,k:0};
+const lerp=(a,b,t)=>a+(b-a)*t,clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function setStatus(t,c=''){statusText.textContent=t;statusBox.className=c}
+function showError(e){
+  setStatus('開始できません','err');detail.style.display='block';
+  detail.textContent=(e?.name||'Error')+': '+(e?.message||String(e))+'\nsecure='+window.isSecureContext+' mediaDevices='+!!navigator.mediaDevices;
+  startBtn.style.display='block';startBtn.disabled=false;startBtn.textContent='もう一度開始';
+}
+function blendMap(r){const o={};for(const c of r?.faceBlendshapes?.[0]?.categories||[])o[c.categoryName]=c.score;return o}
+function setExpression(b){
+  const blink=((b.eyeBlinkLeft||0)+(b.eyeBlinkRight||0))/2>.47;
+  eyesOpen.style.display=blink?'none':'inline';eyesClosed.style.display=blink?'inline':'none';
+  const jaw=b.jawOpen||0;
+  mouthClosed.style.display=jaw<.13?'inline':'none';
+  mouthHalf.style.display=jaw>=.13&&jaw<.48?'inline':'none';
+  mouthOpen.style.display=jaw>=.48?'inline':'none';
+  tongue.style.display=jaw>=.48?'inline':'none';
+}
+function metrics(l){
+  const L=l[234],R=l[454],LE=l[33],RE=l[263],T=l[10],C=l[152],N=l[1];
+  const cx=(L.x+R.x)/2,cy=(T.y+C.y)/2,w=Math.hypot(R.x-L.x,R.y-L.y);
+  return {cx,cy,w,roll:Math.atan2(RE.y-LE.y,RE.x-LE.x)*180/Math.PI,nose:(N.x-cx)/Math.max(w,.001)};
+}
+function updateMotion(m){
+  if(!baseline)baseline={...m};
+  target.x=clamp((m.cx-baseline.cx)*-320,-76,76);
+  target.y=clamp((m.cy-baseline.cy)*220,-56,60);
+  target.r=clamp(m.roll*-.72,-13,13);
+  target.k=clamp(m.nose*-20,-6,6);
+  target.z=clamp(1+(m.w/baseline.w-1)*.45,.93,1.09);
+}
+function render(now){
+  smooth.x=lerp(smooth.x,target.x,.17);smooth.y=lerp(smooth.y,target.y,.17);smooth.r=lerp(smooth.r,target.r,.15);smooth.k=lerp(smooth.k,target.k,.13);smooth.z=lerp(smooth.z,target.z,.13);
+  const idle=Math.sin(now*.0018)*2.2,breath=1+Math.sin(now*.0021)*.003;
+  wrap.style.transform='translate(calc(-50% + '+smooth.x+'px),'+(smooth.y+idle)+'px) rotate('+smooth.r+'deg) skewX('+smooth.k+'deg) scale('+(smooth.z*breath)+')';
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+async function makeTracker(){
+  setStatus('顔認識を読み込み中…');
+  const vision=await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/+esm');
+  const files=await vision.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm');
+  const opts={baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',delegate:'GPU'},runningMode:'VIDEO',numFaces:1,outputFaceBlendshapes:true};
+  try{return await vision.FaceLandmarker.createFromOptions(files,opts)}
+  catch(e){opts.baseOptions.delegate='CPU';return await vision.FaceLandmarker.createFromOptions(files,opts)}
+}
+async function start(){
+  startBtn.disabled=true;detail.style.display='none';
+  try{
+    if(!window.isSecureContext)throw new Error('HTTPSの安全なページとして開かれていません');
+    if(!navigator.mediaDevices?.getUserMedia)throw new Error('このブラウザではカメラAPIが使えません');
+    setStatus('カメラ許可を確認中…');
+    const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480},frameRate:{ideal:30,max:30}},audio:false});
+    video.srcObject=stream;await video.play();
+    landmarker=await makeTracker();baseline=null;running=true;startBtn.style.display='none';setStatus('顔を追跡中','ok');requestAnimationFrame(loop);
+  }catch(e){showError(e)}
+}
+function loop(now){
+  if(!running)return;
+  if(video.readyState>=2&&landmarker&&now-lastDetect>33&&video.currentTime!==lastVideo){
+    lastDetect=now;lastVideo=video.currentTime;
+    try{
+      const r=landmarker.detectForVideo(video,now);
+      if(r.faceLandmarks?.length){noFace=now;const b=blendMap(r);setExpression(b);updateMotion(metrics(r.faceLandmarks[0]));setStatus('顔を追跡中','ok')}
+      else if(now-noFace>500){setStatus('顔をカメラ中央へ');}
+    }catch(e){}
+  }
+  requestAnimationFrame(loop);
+}
+startBtn.addEventListener('click',start);
+window.addEventListener('orientationchange',()=>setTimeout(()=>baseline=null,450));
+setTimeout(()=>start(),350);
+]]></script>
+</body>
+</html>
